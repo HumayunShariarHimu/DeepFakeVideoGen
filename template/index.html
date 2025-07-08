@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DeepFake + Face Hijack</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <h1>DeepFake + AI Face Hijack (Research Demo)</h1>
+
+  <form id="uploadForm" method="post" enctype="multipart/form-data">
+    <label>Upload Face Image:</label>
+    <input type="file" name="faceImage" accept="image/*" required />
+
+    <label>Enter Text:</label>
+    <textarea name="text" placeholder="What should the fake face say?" rows="4" required></textarea>
+
+    <button type="submit">Generate Video</button>
+  </form>
+
+  <div id="result" style="margin-top:20px; display:none;">
+    <h2>ðŸŽ¬ Generated Video:</h2>
+    <video id="outputVideo" controls width="500"></video>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const video = document.getElementById("outputVideo");
+    const result = document.getElementById("result");
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch("/generate", {
+        method: "POST",
+        body: formData
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      video.src = url;
+      result.style.display = "block";
+    };
+  </script>
+</body>
+</html>
